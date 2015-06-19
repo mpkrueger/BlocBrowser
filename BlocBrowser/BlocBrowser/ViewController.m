@@ -75,6 +75,14 @@
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+    
+    UIAlertController *welcome = [UIAlertController alertControllerWithTitle:@"Welcome!" message:@"Hello" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                       style:UIAlertActionStyleCancel handler:nil];
+    
+    [welcome addAction:okAction];
+    
+    [self presentViewController:welcome animated:YES completion:nil];
 }
 
 - (void) viewWillLayoutSubviews {
