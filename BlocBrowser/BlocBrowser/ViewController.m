@@ -81,7 +81,10 @@
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webView.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+    if (self.awesomeToolbar.frame.size.width == 0){
+        self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+    }
+
 }
 
 - (void) resetWebView {
@@ -95,6 +98,7 @@
     
     self.textField.text = nil;
     [self updateButtonsAndTitle];
+    [self.view bringSubviewToFront:self.awesomeToolbar];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -183,6 +187,17 @@
         toolbar.frame = potentialNewFrame;
     }
 }
+
+- (void)floatingToolbar:(AwesomeFloatingToolbar *)toolbar didPinchToResizeByScale:(CGFloat)scale {
+    
+    CGRect potentialNewFrame = CGRectMake(toolbar.frame.origin.x, toolbar.frame.origin.y, toolbar.frame.size.width * scale, toolbar.frame.size.height* scale);
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame) && potentialNewFrame.size.width > 80) {
+        toolbar.frame = potentialNewFrame;
+    }
+    
+}
+
 
 #pragma mark - Miscellaneous
 

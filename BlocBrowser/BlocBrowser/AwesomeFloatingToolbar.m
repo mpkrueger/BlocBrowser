@@ -17,6 +17,7 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
 @end
 
@@ -66,6 +67,9 @@
         
         self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchFired:)];
         [self addGestureRecognizer:self.pinchGesture];
+        
+        self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        [self addGestureRecognizer:self.longPressGesture];
     }
     
     return self;
@@ -139,9 +143,26 @@
 }
 
 - (void) pinchFired:(UIPinchGestureRecognizer *)recognizer {
-    if (recognizer.state == UIGestureRecognizerStateRecognized) {
+//    if (recognizer.state == UIGestureRecognizerStateBegan) {
         NSLog(@"New scale: %f", recognizer.scale);
-        self.transform = CGAffineTransformScale(self.transform, recognizer.scale, recognizer.scale);
+        
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didPinchToResizeByScale:)]) {
+            [self.delegate floatingToolbar:self didPinchToResizeByScale:recognizer.scale];
+        }
+        
+//    }
+}
+
+- (void) longPress:(UILongPressGestureRecognizer *)recognizer {
+    NSLog(@"Long press was detected");
+    NSArray *newColors = @[self.colors[1], self.colors[2], self.colors[3], self.colors[0]];
+    self.colors = newColors;
+    NSLog(@"The first color is: %@", self.colors[0]);
+    NSUInteger i = 0;
+    for (UILabel *label in self.labels) {
+        UIColor *colorForLabel = [self.colors objectAtIndex:i];
+        label.backgroundColor = colorForLabel;
+        i++;
     }
 }
 
